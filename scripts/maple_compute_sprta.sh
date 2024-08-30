@@ -17,6 +17,8 @@ PYPY_PATH="/scratch/dx61/tl8625/tmp/pypy3.10-v7.3.17-linux64/bin/pypy3.10"
 
 ############
 mkdir -p ${TREE_DIR}
+# remove old results
+rm -f ${TREE_DIR}/${MAPLE_SPRTA_TREE_PREFIX}${aln}_nexusTree.tree
 
 for aln_path in "${ALN_DIR}"/*.maple; do
 	aln=$(basename "$aln_path")
