@@ -112,7 +112,6 @@ pipeline {
                                               
                         echo "Compute SPRTA by MAPLE"
                         sh ${SCRIPTS_DIR}/maple_compute_sprta.sh ${ALN_DIR} ${TREE_DIR} ${MAPLE_PATH} ${ML_TREE_PREFIX} ${MAPLE_SPRTA_TREE_PREFIX}
-                        ALN_DIR=$1 # aln dir
 
                         exit
                         EOF
