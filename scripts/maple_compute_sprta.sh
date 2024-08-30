@@ -25,6 +25,6 @@ for aln_path in "${ALN_DIR}"/*.maple; do
     cd ${ALN_DIR} && ${PYPY_PATH} ${MAPLE_PATH} --input ${aln} --output ${ALN_DIR}/${MAPLE_SPRTA_TREE_PREFIX}${aln} --inputTree ${TREE_DIR}/${CMAPLE_SPRTA_TREE_PREFIX}${aln}.treefile ${MAPLE_PARAMS}
     
     # move tree
-    mv ${ALN_DIR}/${MAPLE_SPRTA_TREE_PREFIX}${aln}*.tree ${TREE_DIR}
+    mv ${ALN_DIR}/${MAPLE_SPRTA_TREE_PREFIX}${aln}_nexusTree.tree ${TREE_DIR}
 done
                         
