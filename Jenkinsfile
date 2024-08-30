@@ -28,7 +28,7 @@ pipeline {
         MAPLE_COMMIT_ID = "56ad091"
         MAPLE_VERSION = "MAPLEv0.6.8.py"
         MAPLE_PATH = "${WORKING_DIR}/${MAPLE_REPO_NAME}/${MAPLE_VERSION}"
-        ML_TREE_PREFIX = "ML_tree_"
+        CMAPLE_SPRTA_TREE_PREFIX = "SPRTA_CMAPLE_tree_"
         MAPLE_SPRTA_TREE_PREFIX = "SPRTA_MAPLE_tree_"
     }
     stages {
@@ -112,7 +112,7 @@ pipeline {
                         ssh ${NCI_ALIAS} << EOF
                                               
                         echo "Compute SPRTA by MAPLE"
-                        sh ${SCRIPTS_DIR}/maple_compute_sprta.sh ${ALN_DIR} ${TREE_DIR} ${MAPLE_PATH} ${ML_TREE_PREFIX} ${MAPLE_SPRTA_TREE_PREFIX}
+                        sh ${SCRIPTS_DIR}/maple_compute_sprta.sh ${ALN_DIR} ${TREE_DIR} ${MAPLE_PATH} ${CMAPLE_SPRTA_TREE_PREFIX} ${MAPLE_SPRTA_TREE_PREFIX}
 
                         exit
                         EOF
