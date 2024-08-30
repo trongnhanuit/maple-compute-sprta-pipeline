@@ -85,7 +85,8 @@ pipeline {
                         ssh ${NCI_ALIAS} << EOF
                         mkdir -p ${WORKING_DIR}
                         cd  ${WORKING_DIR}
-                        git clone --recursive ${MAPLE_REPO_URL}
+                        git clone ${MAPLE_REPO_URL}
+                        cd  ${WORKING_DIR}/${MAPLE_REPO_NAME}
                         git reset --hard ${MAPLE_COMMIT_ID}
                         exit
                         EOF
