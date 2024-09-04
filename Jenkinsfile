@@ -11,6 +11,7 @@ properties([
         booleanParam(defaultValue: false, description: 'Download testing data?', name: 'DOWNLOAD_DATA'),
         booleanParam(defaultValue: false, description: 'Infer ML trees?', name: 'INFER_TREE'),
         booleanParam(defaultValue: false, description: 'Compute SPRTA by CMAPLE?', name: 'COMPUTE_SPRTA_CMAPLE'),
+        string(name: 'MODEL', defaultValue: 'GTR', description: 'Substitution model'),
         booleanParam(defaultValue: true, description: 'Download MAPLE', name: 'DOWNLOAD_MAPLE'),
     ])
 ])
@@ -54,6 +55,7 @@ pipeline {
                         // trigger jenkins cmaple-tree-inference
                         build job: 'cmaple-tree-inference', parameters: [booleanParam(name: 'DOWNLOAD_DATA', value: DOWNLOAD_DATA),
                         booleanParam(name: 'INFER_TREE', value: INFER_TREE),
+                        string(name: 'MODEL', value: MODEL),
                         ]
                     }
                     else {
@@ -68,7 +70,7 @@ pipeline {
                 	if (params.COMPUTE_SPRTA_CMAPLE) {
                         echo 'Compute SPRTA by CMAPLE'
                         // trigger jenkins cmaple-build
-                        build job: 'cmaple-compute-sprta', parameters: []
+                        build job: 'cmaple-compute-sprta', parameters: [string(name: 'MODEL', value: MODEL),]
 
                     }
                     else {
@@ -112,7 +114,7 @@ pipeline {
                         ssh ${NCI_ALIAS} << EOF
                                               
                         echo "Compute SPRTA by MAPLE"
-                        sh ${SCRIPTS_DIR}/maple_compute_sprta.sh ${ALN_DIR} ${TREE_DIR} ${MAPLE_PATH} ${CMAPLE_SPRTA_TREE_PREFIX} ${MAPLE_SPRTA_TREE_PREFIX}
+                        sh ${SCRIPTS_DIR}/maple_compute_sprta.sh ${ALN_DIR} ${TREE_DIR} ${MAPLE_PATH} ${CMAPLE_SPRTA_TREE_PREFIX} ${MAPLE_SPRTA_TREE_PREFIX} ${params.MODEL}
 
                         exit
                         EOF
