@@ -12,6 +12,7 @@ properties([
         booleanParam(defaultValue: false, description: 'Infer ML trees?', name: 'INFER_TREE'),
         booleanParam(defaultValue: false, description: 'Compute SPRTA by CMAPLE?', name: 'COMPUTE_SPRTA_CMAPLE'),
         string(name: 'MODEL', defaultValue: 'GTR', description: 'Substitution model'),
+        booleanParam(defaultValue: false, description: 'Blengths fixed?', name: 'BLENGTHS_FIXED'),
         booleanParam(defaultValue: true, description: 'Download MAPLE', name: 'DOWNLOAD_MAPLE'),
     ])
 ])
@@ -70,7 +71,8 @@ pipeline {
                 	if (params.COMPUTE_SPRTA_CMAPLE) {
                         echo 'Compute SPRTA by CMAPLE'
                         // trigger jenkins cmaple-build
-                        build job: 'cmaple-compute-sprta', parameters: [string(name: 'MODEL', value: MODEL),]
+                        build job: 'cmaple-compute-sprta', parameters: [string(name: 'MODEL', value: MODEL),
+                        booleanParam(name: 'BLENGTHS_FIXED', value: BLENGTHS_FIXED),]
 
                     }
                     else {
@@ -110,11 +112,14 @@ pipeline {
                         EOF
                         """
                 	sh "scp -r scripts/* ${NCI_ALIAS}:${SCRIPTS_DIR}"
+                	if (params.BLENGTHS_FIXED) {
+                			sh "scp -r /Users/nhan/DATA/tmp/maple/original/MAPLE/MAPLEv0.6.8_skipPreBlengthOpt.py ${MAPLE_PATH}"
+                		}
                     sh """
                         ssh ${NCI_ALIAS} << EOF
                                               
                         echo "Compute SPRTA by MAPLE"
-                        sh ${SCRIPTS_DIR}/maple_compute_sprta.sh ${ALN_DIR} ${TREE_DIR} ${MAPLE_PATH} ${CMAPLE_SPRTA_TREE_PREFIX} ${MAPLE_SPRTA_TREE_PREFIX} ${params.MODEL}
+                        sh ${SCRIPTS_DIR}/maple_compute_sprta.sh ${ALN_DIR} ${TREE_DIR} ${MAPLE_PATH} ${CMAPLE_SPRTA_TREE_PREFIX} ${MAPLE_SPRTA_TREE_PREFIX} ${params.MODEL} ${params.BLENGTHS_FIXED}
 
                         exit
                         EOF

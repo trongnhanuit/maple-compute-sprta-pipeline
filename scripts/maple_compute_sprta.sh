@@ -8,6 +8,11 @@ MAPLE_PATH=$3 # path to CMAPLE executable
 CMAPLE_SPRTA_TREE_PREFIX=$4 # The prefix of trees with SPRTA computed by CMAPLE
 MAPLE_SPRTA_TREE_PREFIX=$5 # The prefix of trees with SPRTA computed by MAPLE
 MODEL=$6 # Substitution model
+BLENGTHS_FIXED=$7 # keep blengths fixed or not
+BL_FIXED_OPT=""
+if [ "${BLENGTHS_FIXED}" = true ]; then
+  BL_FIXED_OPT=" -blfix"
+fi
 MAPLE_PARAMS="--SPRTA --overwrite --networkOutput --keepInputIQtreeSupports --doNotImproveTopology --doNotReroot" # MAPLE params
 PYPY_PATH="/scratch/dx61/tl8625/tmp/pypy3.10-v7.3.17-linux64/bin/pypy3.10"
 
@@ -24,8 +29,8 @@ rm -f ${TREE_DIR}/${MAPLE_SPRTA_TREE_PREFIX}${aln}_nexusTree.tree
 for aln_path in "${ALN_DIR}"/*.maple; do
 	aln=$(basename "$aln_path")
     echo "Compute SPRTA (by MAPLE) for the tree ${ML_TREE_PREFIX}${aln}.treefile inferred from ${aln}"
-    echo "cd ${ALN_DIR} && ${PYPY_PATH} ${MAPLE_PATH} --input ${aln} --output ${ALN_DIR}/${MAPLE_SPRTA_TREE_PREFIX}${aln} --inputTree ${TREE_DIR}/${ML_TREE_PREFIX}${aln}.treefile ${MAPLE_PARAMS}"
-    cd ${ALN_DIR} && ${PYPY_PATH} ${MAPLE_PATH} --input ${aln} --output ${ALN_DIR}/${MAPLE_SPRTA_TREE_PREFIX}${aln} --inputTree ${TREE_DIR}/${CMAPLE_SPRTA_TREE_PREFIX}${aln}.treefile --model ${MODEL} ${MAPLE_PARAMS}
+    echo "cd ${ALN_DIR} && ${PYPY_PATH} ${MAPLE_PATH} --input ${aln} --output ${ALN_DIR}/${MAPLE_SPRTA_TREE_PREFIX}${aln} --inputTree ${TREE_DIR}/${ML_TREE_PREFIX}${aln}.treefile ${MAPLE_PARAMS} ${BL_FIXED_OPT}"
+    cd ${ALN_DIR} && ${PYPY_PATH} ${MAPLE_PATH} --input ${aln} --output ${ALN_DIR}/${MAPLE_SPRTA_TREE_PREFIX}${aln} --inputTree ${TREE_DIR}/${CMAPLE_SPRTA_TREE_PREFIX}${aln}.treefile --model ${MODEL} ${MAPLE_PARAMS} ${BL_FIXED_OPT}
     
     # move tree
     mv ${ALN_DIR}/${MAPLE_SPRTA_TREE_PREFIX}${aln}_nexusTree.tree ${TREE_DIR}
