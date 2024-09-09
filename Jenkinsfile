@@ -113,7 +113,7 @@ pipeline {
                         """
                 	sh "scp -r scripts/* ${NCI_ALIAS}:${SCRIPTS_DIR}"
                 	if (params.BLENGTHS_FIXED) {
-                			sh "scp -r /Users/nhan/DATA/tmp/maple/original/MAPLE/MAPLEv0.6.8_skipPreBlengthOpt.py ${MAPLE_PATH}"
+                			sh "scp -r /Users/nhan/DATA/tmp/maple/original/MAPLE/MAPLEv0.6.8_skipPreBlengthOpt.py ${NCI_ALIAS}:${MAPLE_PATH}"
                 		}
                     sh """
                         ssh ${NCI_ALIAS} << EOF
