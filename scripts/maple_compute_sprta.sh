@@ -11,7 +11,7 @@ MODEL=$6 # Substitution model
 BLENGTHS_FIXED=$7 # keep blengths fixed or not
 BL_FIXED_OPT=""
 if [ "${BLENGTHS_FIXED}" = true ]; then
-  BL_FIXED_OPT=" -blfix"
+  BL_FIXED_OPT=" --blfix"
 fi
 MAPLE_PARAMS="--SPRTA --overwrite --networkOutput --keepInputIQtreeSupports --doNotImproveTopology --doNotReroot" # MAPLE params
 PYPY_PATH="/scratch/dx61/tl8625/tmp/pypy3.10-v7.3.17-linux64/bin/pypy3.10"
