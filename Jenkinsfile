@@ -86,7 +86,7 @@ pipeline {
                 script {
                 if (params.DOWNLOAD_MAPLE) {
                 	sh """
-                        ssh ${NCI_ALIAS} << EOF
+                        ssh -tt ${NCI_ALIAS} << EOF
                         mkdir -p ${WORKING_DIR}
                         cd  ${WORKING_DIR}
                         git clone ${MAPLE_REPO_URL}
@@ -106,7 +106,7 @@ pipeline {
             steps {
                 script {
                 	sh """
-                        ssh ${NCI_ALIAS} << EOF
+                        ssh -tt ${NCI_ALIAS} << EOF
                         mkdir -p ${SCRIPTS_DIR}
                         exit
                         EOF
@@ -116,7 +116,7 @@ pipeline {
                 			sh "scp -r /Users/nhan/DATA/tmp/maple/original/MAPLE/MAPLEv0.6.8_skipPreBlengthOpt.py ${NCI_ALIAS}:${MAPLE_PATH}"
                 		}
                     sh """
-                        ssh ${NCI_ALIAS} << EOF
+                        ssh -tt ${NCI_ALIAS} << EOF
                                               
                         echo "Compute SPRTA by MAPLE"
                         sh ${SCRIPTS_DIR}/maple_compute_sprta.sh ${ALN_DIR} ${TREE_DIR} ${MAPLE_PATH} ${CMAPLE_SPRTA_TREE_PREFIX} ${MAPLE_SPRTA_TREE_PREFIX} ${params.MODEL} ${params.BLENGTHS_FIXED}
@@ -131,7 +131,7 @@ pipeline {
             steps {
                 script {
                 	sh """
-                        ssh ${NCI_ALIAS} << EOF
+                        ssh -tt ${NCI_ALIAS} << EOF
                         cd  ${WORKING_DIR}
                         echo "Files in ${WORKING_DIR}"
                         ls -ila ${WORKING_DIR}
@@ -158,5 +158,5 @@ pipeline {
 
 def void cleanWs() {
     // ssh to NCI_ALIAS and remove the working directory
-    // sh "ssh ${NCI_ALIAS} 'rm -rf ${REPO_DIR} ${BUILD_SCRIPTS}'"
+    // sh "ssh -tt ${NCI_ALIAS} 'rm -rf ${REPO_DIR} ${BUILD_SCRIPTS}'"
 }
