@@ -107,6 +107,7 @@ pipeline {
                 script {
                 	sh """
                         ssh -tt ${NCI_ALIAS} << EOF
+                        
                         mkdir -p ${SCRIPTS_DIR}
                         exit
                         EOF
