@@ -9,12 +9,12 @@ CMAPLE_SPRTA_TREE_PREFIX=$4 # The prefix of trees with SPRTA computed by CMAPLE
 MAPLE_SPRTA_TREE_PREFIX=$5 # The prefix of trees with SPRTA computed by MAPLE
 MODEL=$6 # Substitution model
 BLENGTHS_FIXED=$7 # keep blengths fixed or not
+PYPY_PATH=$8 # path to pypy
 BL_FIXED_OPT=""
 if [ "${BLENGTHS_FIXED}" = true ]; then
   BL_FIXED_OPT=" --blfix"
 fi
 MAPLE_PARAMS="--SPRTA --overwrite --networkOutput --keepInputIQtreeSupports --doNotImproveTopology --doNotReroot" # MAPLE params
-PYPY_PATH="/scratch/dx61/tl8625/tmp/pypy3.10-v7.3.17-linux64/bin/pypy3.10"
 
 
 ### pre steps #####

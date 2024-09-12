@@ -14,12 +14,14 @@ properties([
         string(name: 'MODEL', defaultValue: 'GTR', description: 'Substitution model'),
         booleanParam(defaultValue: false, description: 'Blengths fixed?', name: 'BLENGTHS_FIXED'),
         booleanParam(defaultValue: true, description: 'Download MAPLE', name: 'DOWNLOAD_MAPLE'),
+        booleanParam(defaultValue: false, description: 'Use CIBIV cluster?', name: 'USE_CIBIV'),
     ])
 ])
 pipeline {
     agent any
     environment {
         NCI_ALIAS = "gadi"
+        SSH_COMP_NODE = ""
         WORKING_DIR = "/scratch/dx61/tl8625/cmaple/ci-cd"
         DATA_DIR = "${WORKING_DIR}/data"
         ALN_DIR = "${DATA_DIR}/aln"
@@ -32,15 +34,36 @@ pipeline {
         MAPLE_PATH = "${WORKING_DIR}/${MAPLE_REPO_NAME}/${MAPLE_VERSION}"
         CMAPLE_SPRTA_TREE_PREFIX = "SPRTA_CMAPLE_tree_"
         MAPLE_SPRTA_TREE_PREFIX = "SPRTA_MAPLE_tree_"
+        PYPY_PATH="/scratch/dx61/tl8625/tmp/pypy3.10-v7.3.17-linux64/bin/pypy3.10"
     }
     stages {
+        stage('Init variables') {
+            steps {
+                script {
+                    if (params.USE_CIBIV) {
+                        NCI_ALIAS = "eingang"
+                        SSH_COMP_NODE = " ssh -tt cox "
+                        WORKING_DIR = "/project/AliSim/cmaple"
+                        
+                        DATA_DIR = "${WORKING_DIR}/data"
+                        ALN_DIR = "${DATA_DIR}/aln"
+                        TREE_DIR = "${DATA_DIR}/tree"
+                        SCRIPTS_DIR = "${WORKING_DIR}/scripts"
+                        MAPLE_PATH = "${WORKING_DIR}/${MAPLE_REPO_NAME}/${MAPLE_VERSION}"
+                        PYPY_PATH="/project/AliSim/tools/pypy3.10-v7.3.17-linux64/bin/pypy3.10"
+                        
+                    }
+                }
+            }
+        }
     	stage("Build CMAPLE") {
             steps {
                 script {
                 	if (params.BUILD_CMAPLE) {
                         echo 'Building CMAPLE'
                         // trigger jenkins cmaple-build
-                        build job: 'cmaple-build', parameters: [string(name: 'BRANCH', value: CMAPLE_BRANCH)]
+                        build job: 'cmaple-build', parameters: [string(name: 'BRANCH', value: CMAPLE_BRANCH),
+                        booleanParam(name: 'USE_CIBIV', value: USE_CIBIV),]
 
                     }
                     else {
@@ -57,6 +80,7 @@ pipeline {
                         build job: 'cmaple-tree-inference', parameters: [booleanParam(name: 'DOWNLOAD_DATA', value: DOWNLOAD_DATA),
                         booleanParam(name: 'INFER_TREE', value: INFER_TREE),
                         string(name: 'MODEL', value: MODEL),
+                        booleanParam(name: 'USE_CIBIV', value: USE_CIBIV),
                         ]
                     }
                     else {
@@ -72,7 +96,8 @@ pipeline {
                         echo 'Compute SPRTA by CMAPLE'
                         // trigger jenkins cmaple-build
                         build job: 'cmaple-compute-sprta', parameters: [string(name: 'MODEL', value: MODEL),
-                        booleanParam(name: 'BLENGTHS_FIXED', value: BLENGTHS_FIXED),]
+                        booleanParam(name: 'BLENGTHS_FIXED', value: BLENGTHS_FIXED),
+                        booleanParam(name: 'USE_CIBIV', value: USE_CIBIV),]
 
                     }
                     else {
@@ -95,6 +120,7 @@ pipeline {
                         exit
                         EOF
                         """
+                    sh "scp -r /Users/nhan/DATA/tmp/maple/original/MAPLE/MAPLEv0.6.8_skipPreBlengthOpt.py ${NCI_ALIAS}:${MAPLE_PATH}"
                     }
                     else {
                         echo 'Skip downloading MAPLE'
@@ -112,14 +138,11 @@ pipeline {
                         EOF
                         """
                 	sh "scp -r scripts/* ${NCI_ALIAS}:${SCRIPTS_DIR}"
-                	if (params.BLENGTHS_FIXED) {
-                			sh "scp -r /Users/nhan/DATA/tmp/maple/original/MAPLE/MAPLEv0.6.8_skipPreBlengthOpt.py ${NCI_ALIAS}:${MAPLE_PATH}"
-                		}
                     sh """
-                        ssh -tt ${NCI_ALIAS} << EOF
+                        ssh -tt ${NCI_ALIAS} ${SSH_COMP_NODE}<< EOF
                                               
                         echo "Compute SPRTA by MAPLE"
-                        sh ${SCRIPTS_DIR}/maple_compute_sprta.sh ${ALN_DIR} ${TREE_DIR} ${MAPLE_PATH} ${CMAPLE_SPRTA_TREE_PREFIX} ${MAPLE_SPRTA_TREE_PREFIX} ${params.MODEL} ${params.BLENGTHS_FIXED}
+                        sh ${SCRIPTS_DIR}/maple_compute_sprta.sh ${ALN_DIR} ${TREE_DIR} ${MAPLE_PATH} ${CMAPLE_SPRTA_TREE_PREFIX} ${MAPLE_SPRTA_TREE_PREFIX} ${params.MODEL} ${params.BLENGTHS_FIXED} ${PYPY_PATH}
 
                         exit
                         EOF
