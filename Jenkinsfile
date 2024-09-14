@@ -21,7 +21,7 @@ pipeline {
     agent any
     environment {
         NCI_ALIAS = "gadi"
-        SSH_COMP_NODE = ""
+        SSH_COMP_NODE = " "
         WORKING_DIR = "/scratch/dx61/tl8625/cmaple/ci-cd"
         DATA_DIR = "${WORKING_DIR}/data"
         ALN_DIR = "${DATA_DIR}/aln"
