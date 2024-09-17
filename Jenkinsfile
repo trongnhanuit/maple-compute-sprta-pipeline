@@ -13,6 +13,7 @@ properties([
         booleanParam(defaultValue: false, description: 'Compute SPRTA by CMAPLE?', name: 'COMPUTE_SPRTA_CMAPLE'),
         string(name: 'MODEL', defaultValue: 'GTR', description: 'Substitution model'),
         booleanParam(defaultValue: false, description: 'Blengths fixed?', name: 'BLENGTHS_FIXED'),
+        booleanParam(defaultValue: true, description: 'Print SPRTA for less-informative sequences?', name: 'PRINT_LESS_INFO_SEQS'),
         booleanParam(defaultValue: true, description: 'Download MAPLE', name: 'DOWNLOAD_MAPLE'),
         booleanParam(defaultValue: false, description: 'Use CIBIV cluster?', name: 'USE_CIBIV'),
     ])
@@ -97,7 +98,8 @@ pipeline {
                         // trigger jenkins cmaple-build
                         build job: 'cmaple-compute-sprta', parameters: [string(name: 'MODEL', value: MODEL),
                         booleanParam(name: 'BLENGTHS_FIXED', value: BLENGTHS_FIXED),
-                        booleanParam(name: 'USE_CIBIV', value: USE_CIBIV),]
+                        booleanParam(name: 'USE_CIBIV', value: USE_CIBIV),
+                        booleanParam(name: 'PRINT_LESS_INFO_SEQS', value: PRINT_LESS_INFO_SEQS),]
 
                     }
                     else {
@@ -142,7 +144,7 @@ pipeline {
                         ssh -tt ${NCI_ALIAS} ${SSH_COMP_NODE}<< EOF
                                               
                         echo "Compute SPRTA by MAPLE"
-                        sh ${SCRIPTS_DIR}/maple_compute_sprta.sh ${ALN_DIR} ${TREE_DIR} ${MAPLE_PATH} ${CMAPLE_SPRTA_TREE_PREFIX} ${MAPLE_SPRTA_TREE_PREFIX} ${params.MODEL} ${params.BLENGTHS_FIXED} ${PYPY_PATH}
+                        sh ${SCRIPTS_DIR}/maple_compute_sprta.sh ${ALN_DIR} ${TREE_DIR} ${MAPLE_PATH} ${CMAPLE_SPRTA_TREE_PREFIX} ${MAPLE_SPRTA_TREE_PREFIX} ${params.MODEL} ${params.BLENGTHS_FIXED} ${PYPY_PATH} ${params.PRINT_LESS_INFO_SEQS}
 
                         exit
                         EOF
