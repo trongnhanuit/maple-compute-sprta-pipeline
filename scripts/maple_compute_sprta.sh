@@ -32,13 +32,13 @@ MAPLE_PARAMS="--SPRTA --overwrite --networkOutput --keepInputIQtreeSupports --do
 ############
 mkdir -p ${TREE_DIR}
 # remove old results
-rm -f ${TREE_DIR}/${MAPLE_SPRTA_TREE_PREFIX}${aln}_nexusTree.tree
+rm -f ${TREE_DIR}/${MAPLE_SPRTA_TREE_PREFIX}${aln}_*.tree
 
 for aln_path in "${ALN_DIR}"/*.maple; do
 	aln=$(basename "$aln_path")
     echo "Compute SPRTA (by MAPLE) for the tree ${ML_TREE_PREFIX}${aln}.treefile inferred from ${aln}"
-    echo "cd ${ALN_DIR} && ${PYPY_PATH} ${MAPLE_PATH} --input ${aln} --output ${ALN_DIR}/${MAPLE_SPRTA_TREE_PREFIX}${aln} --inputTree ${TREE_DIR}/${CMAPLE_SPRTA_TREE_PREFIX}${aln}.treefile --model ${MODEL} ${MAPLE_PARAMS} ${BL_FIXED_OPT} ${ZERO_LENGTH_BRANCHES_OPT}"
-    cd ${ALN_DIR} && ${PYPY_PATH} ${MAPLE_PATH} --input ${aln} --output ${ALN_DIR}/${MAPLE_SPRTA_TREE_PREFIX}${aln} --inputTree ${TREE_DIR}/${CMAPLE_SPRTA_TREE_PREFIX}${aln}.treefile --model ${MODEL} ${MAPLE_PARAMS} ${BL_FIXED_OPT} ${ZERO_LENGTH_BRANCHES_OPT}
+    echo "cd ${ALN_DIR} && ${PYPY_PATH} ${MAPLE_PATH} --input ${aln} --output ${ALN_DIR}/${MAPLE_SPRTA_TREE_PREFIX}${aln} --inputTree ${TREE_DIR}/${CMAPLE_SPRTA_TREE_PREFIX}${aln}.treefile.nexus --model ${MODEL} ${MAPLE_PARAMS} ${BL_FIXED_OPT} ${ZERO_LENGTH_BRANCHES_OPT}"
+    cd ${ALN_DIR} && ${PYPY_PATH} ${MAPLE_PATH} --input ${aln} --output ${ALN_DIR}/${MAPLE_SPRTA_TREE_PREFIX}${aln} --inputTree ${TREE_DIR}/${CMAPLE_SPRTA_TREE_PREFIX}${aln}.treefile.nexus --model ${MODEL} ${MAPLE_PARAMS} ${BL_FIXED_OPT} ${ZERO_LENGTH_BRANCHES_OPT}
     
     # move tree
     mv ${ALN_DIR}/${MAPLE_SPRTA_TREE_PREFIX}${aln}_nexusTree.tree ${TREE_DIR}
