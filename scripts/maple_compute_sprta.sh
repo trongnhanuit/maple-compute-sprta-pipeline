@@ -11,7 +11,7 @@ MODEL=$6 # Substitution model
 BLENGTHS_FIXED=$7 # keep blengths fixed or not
 NOT_REROOT=$8 # whether we can reroot the tree
 PYPY_PATH=$9 # path to pypy
-ZERO_LENGTH_BRANCHES=$10 #  compute supports for branches with a length of zero
+ZERO_LENGTH_BRANCHES=${10} #  compute supports for branches with a length of zero
 
 BL_FIXED_OPT=""
 if [ "${BLENGTHS_FIXED}" = true ]; then
