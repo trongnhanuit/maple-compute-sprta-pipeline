@@ -34,7 +34,7 @@ if [ "${OUT_ALT_SPR}" = true ]; then
   OUT_ALT_SPR_OPT=" --networkOutput"
 fi
 
-MAPLE_PARAMS="--SPRTA --overwrite --keepInputIQtreeSupports --doNotImproveTopology " # MAPLE params
+MAPLE_PARAMS="--SPRTA --overwrite --keepInputIQtreeSupports --doNotImproveTopology  --noSubroundTrees " # MAPLE params
 
 
 ### pre steps #####

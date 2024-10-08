@@ -126,14 +126,8 @@ pipeline {
                         exit
                         EOF
                         """
-                        if (params.NOT_REROOT)
-                        {
-                        	sh "scp -r /Users/nhan/DATA/tmp/maple/original/MAPLE/MAPLEv0.6.8_skipPreBlengthOpt.py ${NCI_ALIAS}:${MAPLE_PATH}"
-                        }
-                    	else
-                    	{
-                    		sh "scp -r /Users/nhan/DATA/tmp/maple/original/MAPLE/MAPLEv0.6.8_skipPreBlengthOpt_wo_MAT.py ${NCI_ALIAS}:${MAPLE_PATH}"
-                    	}
+                        
+                        sh "scp -r /Users/nhan/DATA/tmp/maple/original/MAPLE/MAPLEv0.6.8_skipPreBlengthOpt.py ${NCI_ALIAS}:${MAPLE_PATH}"
                     }
                     else {
                         echo 'Skip downloading MAPLE'
