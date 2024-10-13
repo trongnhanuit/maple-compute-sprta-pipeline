@@ -17,6 +17,7 @@ properties([
         booleanParam(defaultValue: true, description: 'Compute supports for branches with a length of zero?', name: 'ZERO_LENGTH_BRANCHES'),
         booleanParam(defaultValue: false, description: 'Output alternative SPRs?', name: 'OUT_ALT_SPR'),
         booleanParam(defaultValue: true, description: 'Download MAPLE', name: 'DOWNLOAD_MAPLE'),
+        booleanParam(defaultValue: true, description: 'Use local references in MAPLE?', name: 'MAPLE_LOCAL_REFS'),
         booleanParam(defaultValue: false, description: 'Use CIBIV cluster?', name: 'USE_CIBIV'),
     ])
 ])
@@ -149,7 +150,7 @@ pipeline {
                         ssh -tt ${NCI_ALIAS} ${SSH_COMP_NODE}<< EOF
                                               
                         echo "Compute SPRTA by MAPLE"
-                        sh ${SCRIPTS_DIR}/maple_compute_sprta.sh ${ALN_DIR} ${TREE_DIR} ${MAPLE_PATH} ${CMAPLE_SPRTA_TREE_PREFIX} ${MAPLE_SPRTA_TREE_PREFIX} ${params.MODEL} ${params.BLENGTHS_FIXED} ${params.NOT_REROOT} ${PYPY_PATH} ${params.ZERO_LENGTH_BRANCHES} ${params.OUT_ALT_SPR}
+                        sh ${SCRIPTS_DIR}/maple_compute_sprta.sh ${ALN_DIR} ${TREE_DIR} ${MAPLE_PATH} ${CMAPLE_SPRTA_TREE_PREFIX} ${MAPLE_SPRTA_TREE_PREFIX} ${params.MODEL} ${params.BLENGTHS_FIXED} ${params.NOT_REROOT} ${PYPY_PATH} ${params.ZERO_LENGTH_BRANCHES} ${params.OUT_ALT_SPR} ${params.MAPLE_LOCAL_REFS}
 
                         exit
                         EOF

@@ -13,6 +13,7 @@ NOT_REROOT=$8 # whether we can reroot the tree
 PYPY_PATH=$9 # path to pypy
 ZERO_LENGTH_BRANCHES=${10} #  compute supports for branches with a length of zero
 OUT_ALT_SPR=${11} # True to output alternative SPRs 
+MAPLE_LOCAL_REFS=${12} # True to use local references in MAPLE
 
 BL_FIXED_OPT=""
 if [ "${BLENGTHS_FIXED}" = true ]; then
@@ -34,6 +35,11 @@ if [ "${OUT_ALT_SPR}" = true ]; then
   OUT_ALT_SPR_OPT=" --networkOutput"
 fi
 
+MAPLE_LOCAL_REFS_OPT=""
+if [ "${MAPLE_LOCAL_REFS}" = false ]; then
+  MAPLE_LOCAL_REFS_OPT=" --noLocalRef"
+fi
+
 MAPLE_PARAMS="--SPRTA --overwrite --keepInputIQtreeSupports --doNotImproveTopology  --noSubroundTrees " # MAPLE params
 
 
@@ -49,8 +55,8 @@ rm -f ${TREE_DIR}/${MAPLE_SPRTA_TREE_PREFIX}${aln}_*.tree
 for aln_path in "${ALN_DIR}"/*.maple; do
 	aln=$(basename "$aln_path")
     echo "Compute SPRTA (by MAPLE) for the tree ${ML_TREE_PREFIX}${aln}.treefile inferred from ${aln}"
-    echo "cd ${ALN_DIR} && ${PYPY_PATH} ${MAPLE_PATH} --input ${aln} --output ${ALN_DIR}/${MAPLE_SPRTA_TREE_PREFIX}${aln} --inputTree ${TREE_DIR}/${CMAPLE_SPRTA_TREE_PREFIX}${aln}.treefile.nexus --model ${MODEL} ${MAPLE_PARAMS} ${BL_FIXED_OPT} ${NOT_REROOT_OPT} ${ZERO_LENGTH_BRANCHES_OPT} ${OUT_ALT_SPR_OPT}"
-    cd ${ALN_DIR} && ${PYPY_PATH} ${MAPLE_PATH} --input ${aln} --output ${ALN_DIR}/${MAPLE_SPRTA_TREE_PREFIX}${aln} --inputTree ${TREE_DIR}/${CMAPLE_SPRTA_TREE_PREFIX}${aln}.treefile.nexus --model ${MODEL} ${MAPLE_PARAMS} ${BL_FIXED_OPT} ${NOT_REROOT_OPT} ${ZERO_LENGTH_BRANCHES_OPT} ${OUT_ALT_SPR_OPT}
+    echo "cd ${ALN_DIR} && ${PYPY_PATH} ${MAPLE_PATH} --input ${aln} --output ${ALN_DIR}/${MAPLE_SPRTA_TREE_PREFIX}${aln} --inputTree ${TREE_DIR}/${CMAPLE_SPRTA_TREE_PREFIX}${aln}.treefile.nexus --model ${MODEL} ${MAPLE_PARAMS} ${BL_FIXED_OPT} ${NOT_REROOT_OPT} ${ZERO_LENGTH_BRANCHES_OPT} ${OUT_ALT_SPR_OPT} ${MAPLE_LOCAL_REFS_OPT}"
+    cd ${ALN_DIR} && ${PYPY_PATH} ${MAPLE_PATH} --input ${aln} --output ${ALN_DIR}/${MAPLE_SPRTA_TREE_PREFIX}${aln} --inputTree ${TREE_DIR}/${CMAPLE_SPRTA_TREE_PREFIX}${aln}.treefile.nexus --model ${MODEL} ${MAPLE_PARAMS} ${BL_FIXED_OPT} ${NOT_REROOT_OPT} ${ZERO_LENGTH_BRANCHES_OPT} ${OUT_ALT_SPR_OPT} ${MAPLE_LOCAL_REFS_OPT}
     
     # move tree
     mv ${ALN_DIR}/${MAPLE_SPRTA_TREE_PREFIX}${aln}_nexusTree.tree ${TREE_DIR}
